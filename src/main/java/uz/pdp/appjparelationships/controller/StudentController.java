@@ -9,6 +9,7 @@ import uz.pdp.appjparelationships.entity.Address;
 import uz.pdp.appjparelationships.entity.Student;
 import uz.pdp.appjparelationships.entity.Subject;
 import uz.pdp.appjparelationships.payload.StudentDto;
+import uz.pdp.appjparelationships.repository.AddressRepository;
 import uz.pdp.appjparelationships.repository.GroupRepository;
 import uz.pdp.appjparelationships.repository.StudentRepository;
 import uz.pdp.appjparelationships.repository.SubjectRepository;
@@ -24,6 +25,8 @@ public class StudentController {
     GroupRepository groupRepository;
     @Autowired
     SubjectRepository subjectRepository;
+    @Autowired
+    AddressRepository addressRepository;
 
     //1. VAZIRLIK
     @GetMapping("/forMinistry")
@@ -84,12 +87,12 @@ public class StudentController {
         if (!groupRepository.existsById(studentDto.getGroupId())) {
             return "not saved";
         }
-
         List<Subject> subjects = subjectRepository.findAllById(studentDto.getSubjects());
         Address address = new Address();
         address.setCity(studentDto.getCity());
         address.setDistrict(studentDto.getDistrict());
         address.setStreet(studentDto.getStreet());
+        addressRepository.save(address);
         Student student = new Student();
         student.setAddress(address);
         student.setGroup(groupRepository.findById(studentDto.getGroupId()).get());
@@ -118,6 +121,7 @@ public class StudentController {
         address.setCity(studentDto.getCity());
         address.setDistrict(studentDto.getDistrict());
         address.setStreet(studentDto.getStreet());
+        addressRepository.save(address);
         student.setAddress(address);
         student.setGroup(groupRepository.findById(studentDto.getGroupId()).get());
         student.setFirstName(studentDto.getFirstName());
